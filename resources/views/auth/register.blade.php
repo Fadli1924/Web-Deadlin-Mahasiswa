@@ -1,4 +1,16 @@
 <x-guest-layout>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #e0f7ff, #b3e5fc, #81d4fa) !important;
+            background-image: url('https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+        }
+        .min-h-screen {
+            background: transparent !important;
+        }
+    </style>
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
