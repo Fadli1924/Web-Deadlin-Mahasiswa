@@ -13,7 +13,14 @@ class DashboardController extends Controller
                     ->orderBy('deadline', 'asc')
                     ->get();
 
-        return view('dashboard', compact('tasks'));
+        // Get notifications for tasks with deadlines within 3 days
+        $notifications = Task::where('user_id', auth()->id())
+                            ->whereDate('deadline', '>', now())
+                            ->whereDate('deadline', '<=', now()->addDays(3))
+                            ->orderBy('deadline', 'asc')
+                            ->get();
+
+        return view('dashboard', compact('tasks', 'notifications'));
     }
 
     public function create()

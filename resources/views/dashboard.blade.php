@@ -29,6 +29,45 @@
                 </div>
             @endif
 
+            <!-- Notifications Section -->
+            @if($notifications->count() > 0)
+                <div class="mb-6">
+                    <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-l-4 border-orange-500 dark:border-orange-400 p-4 rounded-lg shadow-lg">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-orange-500 dark:text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <h3 class="text-sm font-medium text-orange-800 dark:text-orange-200">
+                                    ⏰ Reminder Deadline Dekat
+                                </h3>
+                                <div class="mt-2 text-sm text-orange-700 dark:text-orange-300">
+                                    <p class="mb-2">Ada {{ $notifications->count() }} tugas yang deadline-nya dalam 3 hari ke depan:</p>
+                                    <ul class="space-y-1">
+                                        @foreach($notifications as $notification)
+                                            <li class="flex items-center">
+                                                <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                                                <strong>{{ $notification->title }}</strong> - 
+                                                <span class="ml-1">{{ $notification->deadline->format('d M Y H:i') }}</span>
+                                                @if($notification->deadline->diffInDays() == 0)
+                                                    <span class="ml-2 px-2 py-0.5 bg-red-200 dark:bg-red-700 text-red-800 dark:text-red-200 rounded text-xs font-semibold">Hari ini!</span>
+                                                @elseif($notification->deadline->diffInDays() == 1)
+                                                    <span class="ml-2 px-2 py-0.5 bg-orange-200 dark:bg-orange-700 text-orange-800 dark:text-orange-200 rounded text-xs font-semibold">Besok!</span>
+                                                @else
+                                                    <span class="ml-2 px-2 py-0.5 bg-yellow-200 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 rounded text-xs font-semibold">{{ $notification->deadline->diffInDays() }} hari lagi</span>
+                                                @endif
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Tasks Section - Left Side -->
                 <div class="lg:col-span-2">
