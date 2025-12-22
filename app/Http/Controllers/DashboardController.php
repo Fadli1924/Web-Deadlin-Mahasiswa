@@ -15,8 +15,8 @@ class DashboardController extends Controller
 
         // Get notifications for tasks with deadlines within 3 days
         $notifications = Task::where('user_id', auth()->id())
-                            ->whereDate('deadline', '>', now())
-                            ->whereDate('deadline', '<=', now()->addDays(3))
+                            ->where('deadline', '>', now())
+                            ->where('deadline', '<=', now()->addDays(3))
                             ->orderBy('deadline', 'asc')
                             ->get();
 
