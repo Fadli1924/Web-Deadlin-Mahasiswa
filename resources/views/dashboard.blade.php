@@ -60,7 +60,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="ml-3">
+                                            <div class="ml-3 flex flex-col gap-2">
                                                 @if($task->deadline->isPast())
                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -83,6 +83,9 @@
                                                         Aktif
                                                     </span>
                                                 @endif
+                                                <a href="{{ route('tasks.edit', $task) }}" class="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition">
+                                                    ✏️ Edit
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

@@ -38,4 +38,36 @@ class DashboardController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Tugas berhasil ditambahkan!');
     }
+
+    public function edit(Task $task)
+    {
+        // Cek apakah user adalah pemilik task
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('tasks.edit', compact('task'));
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        // Cek apakah user adalah pemilik task
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline' => 'required|date',
+        ]);
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'deadline' => $request->deadline,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Tugas berhasil diperbarui!');
+    }
 }
