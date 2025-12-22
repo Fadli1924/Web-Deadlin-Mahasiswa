@@ -13,7 +13,14 @@ class DashboardController extends Controller
                     ->orderBy('deadline', 'asc')
                     ->get();
 
-        return view('dashboard', compact('tasks'));
+        // Get notifications for tasks with deadlines within 3 days
+        $notifications = Task::where('user_id', auth()->id())
+                            ->whereDate('deadline', '>', now())
+                            ->whereDate('deadline', '<=', now()->addDays(3))
+                            ->orderBy('deadline', 'asc')
+                            ->get();
+
+        return view('dashboard', compact('tasks', 'notifications'));
     }
 
     public function create()
@@ -37,5 +44,37 @@ class DashboardController extends Controller
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Tugas berhasil ditambahkan!');
+    }
+
+    public function edit(Task $task)
+    {
+        // Cek apakah user adalah pemilik task
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('tasks.edit', compact('task'));
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        // Cek apakah user adalah pemilik task
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline' => 'required|date',
+        ]);
+
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'deadline' => $request->deadline,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Tugas berhasil diperbarui!');
     }
 }
