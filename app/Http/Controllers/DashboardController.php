@@ -77,4 +77,14 @@ class DashboardController extends Controller
 
         return redirect()->route('dashboard')->with('success', 'Tugas berhasil diperbarui!');
     }
+
+    // Fitur hapus tugas
+    public function destroy(Task $task)
+    {
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+        $task->delete();
+        return redirect()->route('dashboard')->with('success', 'Tugas berhasil dihapus!');
+    }
 }

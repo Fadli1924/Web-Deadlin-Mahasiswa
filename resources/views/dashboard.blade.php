@@ -125,6 +125,13 @@
                                                 <a href="{{ route('tasks.edit', $task) }}" class="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition">
                                                     ✏️ Edit
                                                 </a>
+                                                <form action="{{ route('tasks.destroy', $task) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus tugas ini?')" style="margin-top: 4px;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800 transition">
+                                                        🗑️ Hapus
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
