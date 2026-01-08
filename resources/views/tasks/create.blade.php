@@ -10,9 +10,15 @@
         </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div class="absolute top-0 right-0 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8 relative z-10">
+            <div class="p-[2px] bg-gradient-to-r from-pink-400 via-purple-400 to-yellow-400 dark:from-pink-600 dark:via-purple-600 dark:to-yellow-600 rounded-lg">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6">
                     <form method="POST" action="{{ route('tasks.store') }}">
                         @csrf
@@ -51,6 +57,8 @@
                     </form>
                 </div>
             </div>
+            </div>
+        </div>
         </div>
     </div>
 </x-app-layout>
