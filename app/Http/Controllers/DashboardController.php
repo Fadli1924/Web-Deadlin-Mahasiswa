@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    // Hapus semua tugas yang sudah terlewat
+    public function destroyOverdue()
+    {
+        $deleted = Task::where('user_id', auth()->id())
+            ->where('deadline', '<', now())
+            ->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Semua tugas yang sudah terlewat berhasil dihapus!');
+    }
     public function index()
     {
         $tasks = Task::where('user_id', auth()->id())

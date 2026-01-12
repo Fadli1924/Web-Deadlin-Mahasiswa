@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
     // Routes untuk Task
     Route::get('/tasks/create', [DashboardController::class, 'create'])->name('tasks.create');
+    Route::post('/tasks/delete-overdue', [DashboardController::class, 'destroyOverdue'])->name('tasks.destroyOverdue');
     Route::post('/tasks', [DashboardController::class, 'store'])->name('tasks.store');
     Route::get('/tasks/{task}/edit', [DashboardController::class, 'edit'])->name('tasks.edit');
     Route::patch('/tasks/{task}', [DashboardController::class, 'update'])->name('tasks.update');
