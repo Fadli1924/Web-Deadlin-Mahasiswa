@@ -96,4 +96,18 @@ class DashboardController extends Controller
         $task->delete();
         return redirect()->route('dashboard')->with('success', 'Tugas berhasil dihapus!');
     }
+
+    // Fitur tandai tugas selesai
+    public function markComplete(Task $task)
+    {
+        if ($task->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $task->update([
+            'is_completed' => true,
+            'completed_at' => now()
+        ]);
+        return redirect()->route('dashboard')->with('success', 'Tugas berhasil ditandai selesai!');
+    }
 }
