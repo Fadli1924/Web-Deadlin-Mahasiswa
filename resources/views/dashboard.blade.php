@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Dashboard') }}
+                {{ __('Selamat Datang') }}
             </h2>
             <div class="flex items-center space-x-4">
                 <a href="{{ route('tasks.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -140,8 +140,8 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2">
+            <div class="grid grid-cols-1 gap-6">
+                <div>
                     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-2xl sm:rounded-3xl border border-white/20 dark:border-gray-700/20 p-4">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
                             📅 Tugas Deadline Mata Kuliah
@@ -271,27 +271,6 @@
                                 </p>
                             </div>
                         @endif
-                    </div>
-                </div>
-
-                <div class="lg:col-span-1">
-                    <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-2xl sm:rounded-3xl border border-white/20 dark:border-gray-700/20 p-4">
-                        <div class="text-center">
-                            <div class="mb-4">
-                                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                                Selamat Datang!
-                            </h3>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4 text-xs">
-                                Kelola deadline tugas mata kuliah Anda dengan mudah dan efisien.
-                            </p>
-                            <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
-                        </div>
                     </div>
                 </div>
             </div>
