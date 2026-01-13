@@ -22,20 +22,17 @@
     </x-slot>
 
     <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 relative overflow-hidden">
-        <!-- Decorative Elements -->
         <div class="absolute top-0 left-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
         <div class="absolute top-0 right-0 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
         <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 relative z-10">
-            <!-- Success Message -->
             @if(session('success'))
                 <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
             @endif
 
-            <!-- Notifications Section -->
             @if($notifications->count() > 0)
                 <div class="mb-6">
                     <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-l-4 border-orange-500 dark:border-orange-400 p-4 rounded-lg shadow-lg">
@@ -57,12 +54,14 @@
                                                 <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
                                                 <strong>{{ $notification->title }}</strong> - 
                                                 <span class="ml-1">{{ $notification->deadline->format('d M Y H:i') }}</span>
-                                                @if($notification->deadline->diffInDays() == 0)
+                                                
+                                                {{-- LOGIKA NOTIFIKASI DIPERBAIKI --}}
+                                                @if($notification->deadline->isToday())
                                                     <span class="ml-2 px-2 py-0.5 bg-red-200 dark:bg-red-700 text-red-800 dark:text-red-200 rounded text-xs font-semibold">Hari ini!</span>
-                                                @elseif($notification->deadline->diffInDays() == 1)
+                                                @elseif($notification->deadline->isTomorrow())
                                                     <span class="ml-2 px-2 py-0.5 bg-orange-200 dark:bg-orange-700 text-orange-800 dark:text-orange-200 rounded text-xs font-semibold">Besok!</span>
                                                 @else
-                                                    <span class="ml-2 px-2 py-0.5 bg-yellow-200 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 rounded text-xs font-semibold">{{ $notification->deadline->diffInDays() }} hari lagi</span>
+                                                    <span class="ml-2 px-2 py-0.5 bg-yellow-200 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200 rounded text-xs font-semibold">{{ $notification->deadline->diffInDays(now()) }} hari lagi</span>
                                                 @endif
                                             </li>
                                         @endforeach
@@ -75,7 +74,6 @@
             @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Tasks Section - Left Side -->
                 <div class="lg:col-span-2">
                     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-2xl sm:rounded-3xl border border-white/20 dark:border-gray-700/20 p-4">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
@@ -105,8 +103,11 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
                                             <div class="ml-3 flex flex-col gap-2">
+                                                {{-- LOGIKA UTAMA DIPERBAIKI DI SINI --}}
                                                 @if($task->deadline->isPast())
+                                                    {{-- Kondisi 1: Waktu SUDAH LEWAT --}}
                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
@@ -114,14 +115,18 @@
                                                         </svg>
                                                         Terlewat
                                                     </span>
-                                                @elseif($task->deadline->diffInDays() <= 1)
+
+                                                @elseif($task->deadline->isToday() || $task->deadline->isTomorrow())
+                                                    {{-- Kondisi 2: HARI INI (belum lewat jam) ATAU BESOK --}}
                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                                         </svg>
                                                         Segera
                                                     </span>
+
                                                 @else
+                                                    {{-- Kondisi 3: MASIH LAMA --}}
                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                                                         <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
@@ -129,6 +134,7 @@
                                                         Aktif
                                                     </span>
                                                 @endif
+                                                
                                                 <a href="{{ route('tasks.edit', $task) }}" class="inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition">
                                                     ✏️ Edit
                                                 </a>
@@ -162,7 +168,6 @@
                     </div>
                 </div>
 
-                <!-- Welcome Section - Right Side -->
                 <div class="lg:col-span-1">
                     <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-2xl sm:rounded-3xl border border-white/20 dark:border-gray-700/20 p-4">
                         <div class="text-center">
@@ -179,7 +184,6 @@
                             <p class="text-gray-600 dark:text-gray-300 mb-4 text-xs">
                                 Kelola deadline tugas mata kuliah Anda dengan mudah dan efisien.
                             </p>
-                            <!-- Decorative Line -->
                             <div class="w-12 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
                         </div>
                     </div>
@@ -188,30 +192,15 @@
         </div>
     </div>
 
-    <!-- Custom CSS for animations -->
     <style>
         @keyframes blob {
-            0% {
-                transform: translate(0px, 0px) scale(1);
-            }
-            33% {
-                transform: translate(30px, -50px) scale(1.1);
-            }
-            66% {
-                transform: translate(-20px, 20px) scale(0.9);
-            }
-            100% {
-                transform: translate(0px, 0px) scale(1);
-            }
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
         }
-        .animate-blob {
-            animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-            animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-            animation-delay: 4s;
-        }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </x-app-layout>
