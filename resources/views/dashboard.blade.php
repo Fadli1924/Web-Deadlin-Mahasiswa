@@ -40,67 +40,80 @@
                         Filter Status & Statistik:
                     </h3>
                     
+                    @php
+                        // Hitung semua kategori tugas
+                        $allTasksCount = $tasks->where('is_completed', false)->count();
+                        $urgentCount = $tasks->filter(function($task) {
+                            return !$task->is_completed && ($task->deadline->isToday() || $task->deadline->isTomorrow()) && !$task->deadline->isPast();
+                        })->count();
+                        $overdueCount = $tasks->filter(function($task) {
+                            return !$task->is_completed && $task->deadline->isPast();
+                        })->count();
+                        $completedCount = $tasks->where('is_completed', true)->count();
+                        
+                        // Total tugas keseluruhan
+                        $totalTasks = $allTasksCount + $completedCount;
+                        
+                        // Hitung persentase
+                        $urgentPercentage = $totalTasks > 0 ? round(($urgentCount / $totalTasks) * 100, 1) : 0;
+                        $overduePercentage = $totalTasks > 0 ? round(($overdueCount / $totalTasks) * 100, 1) : 0;
+                        $completedPercentage = $totalTasks > 0 ? round(($completedCount / $totalTasks) * 100, 1) : 0;
+                        $allTasksPercentage = $totalTasks > 0 ? round(($allTasksCount / $totalTasks) * 100, 1) : 0;
+                    @endphp
+
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                         <!-- Semua Tugas -->
                         <a href="{{ route('dashboard') }}" class="filter-btn-all p-4 rounded-2xl text-center border-2 {{ request('status') == '' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30' : 'border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-700/50' }} hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition">
                             <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                @php
-                                    $allTasksCount = $tasks->where('is_completed', false)->count();
-                                @endphp
                                 {{ $allTasksCount }}
                             </div>
                             <div class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Semua</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-500">{{ $allTasksPercentage }}%</div>
                         </a>
 
                         <!-- Segera (Jadwal Segera) -->
                         <a href="{{ route('dashboard', ['status' => 'urgent']) }}" class="filter-btn p-4 rounded-2xl text-center border-2 {{ request('status') == 'urgent' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/30' : 'border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-700/50' }} hover:border-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/30 transition">
                             <div class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-                                @php
-                                    $urgentCount = $tasks->filter(function($task) {
-                                        return !$task->is_completed && ($task->deadline->isToday() || $task->deadline->isTomorrow()) && !$task->deadline->isPast();
-                                    })->count();
-                                @endphp
                                 {{ $urgentCount }}
                             </div>
                             <div class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Segera</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-500">3.6%</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-500">{{ $urgentPercentage }}%</div>
                         </a>
 
                         <!-- Terlewat (Jadwal Terlewat) -->
                         <a href="{{ route('dashboard', ['status' => 'overdue']) }}" class="filter-btn p-4 rounded-2xl text-center border-2 {{ request('status') == 'overdue' ? 'border-red-500 bg-red-50 dark:bg-red-900/30' : 'border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-700/50' }} hover:border-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 transition">
                             <div class="text-2xl font-bold text-red-600 dark:text-red-400">
-                                @php
-                                    $overdueCount = $tasks->filter(function($task) {
-                                        return !$task->is_completed && $task->deadline->isPast();
-                                    })->count();
-                                @endphp
                                 {{ $overdueCount }}
                             </div>
                             <div class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Terlewat</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-500">0.0%</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-500">{{ $overduePercentage }}%</div>
                         </a>
 
                         <!-- Selesai (Tugas yang Sudah Diselesaikan) -->
                         <a href="{{ route('dashboard', ['status' => 'completed']) }}" class="filter-btn p-4 rounded-2xl text-center border-2 {{ request('status') == 'completed' ? 'border-green-500 bg-green-50 dark:bg-green-900/30' : 'border-gray-200 dark:border-gray-600 bg-white/50 dark:bg-gray-700/50' }} hover:border-green-500 hover:bg-green-50 dark:hover:bg-green-900/30 transition">
                             <div class="text-2xl font-bold text-green-600 dark:text-green-400">
-                                @php
-                                    $completedCount = $tasks->where('is_completed', true)->count();
-                                @endphp
                                 {{ $completedCount }}
                             </div>
                             <div class="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Selesai</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-500">95.6%</div>
+                            <div class="text-xs text-gray-500 dark:text-gray-500">{{ $completedPercentage }}%</div>
                         </a>
                     </div>
 
                     <!-- Progress Bar -->
                     <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-green-400 via-green-500 to-yellow-400 h-2 rounded-full" style="width: 95.6%"></div>
+                        <div class="bg-gradient-to-r from-green-400 via-green-500 to-yellow-400 h-2 rounded-full" style="width: {{ $completedPercentage }}%"></div>
                     </div>
                 </div>
             </div>
 
-            @if($notifications->count() > 0)
+            @php
+                // Filter notifikasi hanya untuk tugas yang belum selesai
+                $activeNotifications = $notifications->filter(function($notification) {
+                    return !$notification->is_completed;
+                });
+            @endphp
+
+            @if($activeNotifications->count() > 0)
                 <div class="mb-6">
                     <div class="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-l-4 border-orange-500 dark:border-orange-400 p-4 rounded-lg shadow-lg">
                         <div class="flex items-start">
@@ -114,9 +127,9 @@
                                     ⏰ Reminder Deadline Dekat
                                 </h3>
                                 <div class="mt-2 text-sm text-orange-700 dark:text-orange-300">
-                                    <p class="mb-2">Ada {{ $notifications->count() }} tugas yang deadline-nya dalam 3 hari ke depan:</p>
+                                    <p class="mb-2">Ada {{ $activeNotifications->count() }} tugas yang deadline-nya dalam 3 hari ke depan:</p>
                                     <ul class="space-y-1">
-                                        @foreach($notifications as $notification)
+                                        @foreach($activeNotifications as $notification)
                                             <li class="flex items-center">
                                                 <span class="inline-block w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
                                                 <strong>{{ $notification->title }}</strong> - 
@@ -247,6 +260,7 @@
                                                 <form action="{{ route('tasks.destroy', $task) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus tugas ini?')" class="col-span-2">
                                                     @csrf
                                                     @method('DELETE')
+                                                    <input type="hidden" name="status" value="{{ request('status', '') }}">
                                                     <button type="submit" class="w-full inline-flex items-center justify-center px-3 py-1 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-800 transition">
                                                         🗑️ Hapus
                                                     </button>

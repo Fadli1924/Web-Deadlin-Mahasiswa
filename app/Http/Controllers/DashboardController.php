@@ -88,12 +88,20 @@ class DashboardController extends Controller
     }
 
     // Fitur hapus tugas
-    public function destroy(Task $task)
+    public function destroy(Request $request, Task $task)
     {
         if ($task->user_id !== auth()->id()) {
             abort(403);
         }
+        
         $task->delete();
+        
+        // Jika ada status parameter, redirect ke halaman filter yang sama
+        $status = $request->input('status');
+        if ($status) {
+            return redirect()->route('dashboard', ['status' => $status])->with('success', 'Tugas berhasil dihapus!');
+        }
+        
         return redirect()->route('dashboard')->with('success', 'Tugas berhasil dihapus!');
     }
 
